@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ec4899" />
+      <stop offset="100%" stop-color="#8b5cf6" />
+    </linearGradient>
+    <filter id="shadow3" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="10" stdDeviation="15" flood-color="#000" flood-opacity="0.25"/>
+    </filter>
+  </defs>
+  <rect width="400" height="300" fill="url(#bg3)"/>
+  <circle cx="200" cy="150" r="100" fill="white" opacity="0.1"/>
+  <g transform="translate(100, 90)" filter="url(#shadow3)">
+    <!-- Keyboard -->
+    <rect x="0" y="0" width="200" height="90" rx="14" fill="#1e1b4b"/>
+    <!-- Keys rows -->
+    <g fill="#f43f5e" opacity="0.9">
+      <rect x="15" y="15" width="20" height="15" rx="4"/>
+      <rect x="42" y="15" width="20" height="15" rx="4"/>
+      <rect x="69" y="15" width="20" height="15" rx="4"/>
+      <rect x="96" y="15" width="20" height="15" rx="4"/>
+      <rect x="123" y="15" width="20" height="15" rx="4"/>
+      <rect x="150" y="15" width="35" height="15" rx="4"/>
+    </g>
+    <g fill="#a855f7" opacity="0.9">
+      <rect x="15" y="38" width="30" height="15" rx="4"/>
+      <rect x="52" y="38" width="20" height="15" rx="4"/>
+      <rect x="79" y="38" width="20" height="15" rx="4"/>
+      <rect x="106" y="38" width="20" height="15" rx="4"/>
+      <rect x="133" y="38" width="52" height="15" rx="4"/>
+    </g>
+    <g fill="#38bdf8" opacity="0.9">
+      <rect x="15" y="61" width="35" height="15" rx="4"/>
+      <rect x="57" y="61" width="90" height="15" rx="4"/>
+      <rect x="154" y="61" width="31" height="15" rx="4"/>
+    </g>
+  </g>
+  <text x="200" y="240" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#ffffff" text-anchor="middle" letter-spacing="1">MECHANICAL KEYBOARD</text>
+</svg>
