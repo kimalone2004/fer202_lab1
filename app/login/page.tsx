@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Card,
-  CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -13,13 +13,17 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const { signIn } = useAuth(); // useContext được gọi bên trong useAuth()
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const [successMessage, setSuccessMessage] = useState("");
+  const [authError, setAuthError] = useState(""); // Lỗi từ Supabase
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -51,33 +55,44 @@ export default function LoginPage() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newErrors: { email?: string; password?: string } = {};
+    setAuthError(""); // reset Supabase error
 
+    // ── Client-side validation (giữ nguyên từ Lab 2) ────────────────────────
+    const newErrors: { email?: string; password?: string } = {};
     const trimmedEmail = email.trim();
     if (!trimmedEmail) {
       newErrors.email = "Email is required";
     } else if (!emailRegex.test(trimmedEmail)) {
       newErrors.email = "Please enter a valid email address";
     }
-
     if (!password) {
       newErrors.password = "Password is required";
     }
-
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      setSuccessMessage("");
-    } else {
-      setErrors({});
-      setSuccessMessage("Login successful (demo)");
+      return;
     }
+    setErrors({});
+
+    // ── Gọi Supabase signIn ──────────────────────────────────────────────────
+    setIsSubmitting(true);
+    const { error } = await signIn(trimmedEmail, password);
+    setIsSubmitting(false);
+
+    if (error) {
+      setAuthError(error);
+      return;
+    }
+
+    // Thành công → redirect về trang chủ
+    router.replace("/");
   };
 
   return (
     <div className="min-h-screen w-full flex flex-col justify-between bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 p-4 sm:p-6 lg:p-8">
-      {/* Header bar with Back to Home button */}
+      {/* Header bar */}
       <div className="max-w-md w-full mx-auto flex items-center justify-between mb-4">
         <Link
           href="/"
@@ -98,13 +113,13 @@ export default function LoginPage() {
             </CardDescription>
           </CardHeader>
 
-          {/* Success Message */}
-          {successMessage && (
+          {/* Supabase error (chỉ xuất hiện khi Supabase reject) */}
+          {authError && (
             <div
-              data-testid="form-success"
-              className="mb-5 p-3 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm font-semibold text-center"
+              data-testid="error-auth"
+              className="mb-5 p-3 rounded-lg bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm font-semibold text-center"
             >
-              {successMessage}
+              {authError}
             </div>
           )}
 
@@ -115,7 +130,7 @@ export default function LoginPage() {
             onSubmit={handleSubmit}
             className="space-y-4"
           >
-            {/* Email Field */}
+            {/* Email */}
             <div className="space-y-1.5">
               <Label htmlFor="login-email">Email</Label>
               <Input
@@ -137,7 +152,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Password Field */}
+            {/* Password */}
             <div className="space-y-1.5">
               <Label htmlFor="login-password">Mật khẩu</Label>
               <Input
@@ -159,13 +174,14 @@ export default function LoginPage() {
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <Button
               type="submit"
               data-testid="login-submit"
-              className="w-full mt-2 cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition-colors shadow-sm"
+              disabled={isSubmitting}
+              className="w-full mt-2 cursor-pointer bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 rounded-lg transition-colors shadow-sm disabled:opacity-60"
             >
-              Đăng nhập
+              {isSubmitting ? "Đang đăng nhập…" : "Đăng nhập"}
             </Button>
           </form>
 
@@ -182,7 +198,7 @@ export default function LoginPage() {
       </div>
 
       <div className="text-center text-xs text-zinc-400 py-2">
-        FER202 Lab 2 • Next.js
+        FER202 Lab 3 • Next.js + Supabase
       </div>
     </div>
   );
