@@ -31,22 +31,48 @@ export default function SiteHeader() {
           {/* While loading: show nothing to avoid flash */}
           {loading ? null : user ? (
             // ── Logged-in state ──────────────────────────────────────────
-            <>
-              <span
-                data-testid="user-email"
-                className="hidden sm:inline text-sm font-medium text-zinc-600 dark:text-zinc-300 truncate max-w-[200px]"
+            <div className="flex items-center gap-2.5">
+              <Link
+                href="/account"
+                className="group flex items-center gap-2 px-3 py-1.5 rounded-full bg-zinc-100/80 dark:bg-zinc-800/80 border border-zinc-200/90 dark:border-zinc-700/70 hover:border-indigo-300 dark:hover:border-indigo-500/50 hover:bg-white dark:hover:bg-zinc-800 transition-all shadow-xs"
+                title="Tài khoản của tôi"
               >
-                {user.email}
-              </span>
+                <div className="h-6 w-6 rounded-full bg-gradient-to-tr from-indigo-600 to-violet-500 flex items-center justify-center text-white text-[11px] font-bold shadow-xs">
+                  {user.email?.[0]?.toUpperCase() ?? "U"}
+                </div>
+                <span
+                  data-testid="user-email"
+                  className="hidden sm:inline text-xs sm:text-sm font-medium text-zinc-700 dark:text-zinc-200 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 truncate max-w-[190px] transition-colors"
+                >
+                  {user.email}
+                </span>
+              </Link>
+
               <Button
                 data-testid="btn-logout"
                 onClick={signOut}
                 variant="outline"
-                className="cursor-pointer border-zinc-300 dark:border-zinc-700 text-zinc-700 dark:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                className="cursor-pointer gap-1.5 px-3 py-1.5 h-auto rounded-full text-xs sm:text-sm font-medium border-zinc-200 dark:border-zinc-700 text-zinc-600 dark:text-zinc-300 hover:text-red-600 dark:hover:text-red-400 hover:border-red-200 dark:hover:border-red-900/50 hover:bg-red-50/80 dark:hover:bg-red-950/30 transition-all shadow-xs"
               >
-                Đăng xuất
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="opacity-70 group-hover:opacity-100"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" x2="9" y1="12" y2="12" />
+                </svg>
+                <span>Đăng xuất</span>
               </Button>
-            </>
+            </div>
           ) : (
             // ── Logged-out state ─────────────────────────────────────────
             <>
