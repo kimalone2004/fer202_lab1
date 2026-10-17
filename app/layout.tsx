@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { FavoritesProvider } from "@/contexts/FavoritesContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ShopVibe — FER202 Lab 3",
-  description: "Next.js product listing with Supabase authentication",
+  title: "ShopVibe — FER202 Lab 5",
+  description: "Next.js product listing with Supabase authentication and favorites",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -26,7 +27,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col">
         {/* AuthProvider wraps the entire app so any page/component can read auth state */}
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          {/* FavoritesProvider inside AuthProvider — it needs the logged-in user */}
+          <FavoritesProvider>{children}</FavoritesProvider>
+        </AuthProvider>
       </body>
     </html>
   );
