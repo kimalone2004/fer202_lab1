@@ -1,7 +1,7 @@
 import React from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { products, formatPrice } from "@/data/products";
+import { products, formatPrice, categoryLabels } from "@/data/products";
 import type { Metadata } from "next";
 import FavoriteButton from "@/components/FavoriteButton";
 
@@ -113,7 +113,7 @@ export default async function ProductDetailPage({
               data-testid="detail-category"
               className="inline-flex self-start items-center rounded-full bg-indigo-50 dark:bg-indigo-950/40 px-3 py-1 text-xs font-semibold text-indigo-700 dark:text-indigo-300"
             >
-              {product.category}
+              {categoryLabels[product.category] || product.category}
             </span>
 
             <p

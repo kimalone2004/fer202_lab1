@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Product, formatPrice } from "@/data/products";
+import { Product, formatPrice, categoryLabels } from "@/data/products";
 import {
   Card,
   CardContent,
@@ -69,7 +69,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Category badge + Detail link */}
         <CardFooter className="p-5 pt-2 flex items-center justify-between gap-2">
           <span className="inline-flex items-center rounded-full bg-indigo-50 dark:bg-indigo-950/40 px-2.5 py-0.5 text-xs font-medium text-indigo-700 dark:text-indigo-300">
-            {product.category}
+            {categoryLabels[product.category] || product.category}
           </span>
           <Link
             href={`/products/${product.id}`}
@@ -82,3 +82,4 @@ export default function ProductCard({ product }: ProductCardProps) {
     </Card>
   );
 }
+

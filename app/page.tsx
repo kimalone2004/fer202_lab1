@@ -1,5 +1,5 @@
 import React from "react";
-import { products, getCategories } from "@/data/products";
+import { products, getCategories, categoryLabels } from "@/data/products";
 import ProductCard from "@/components/ProductCard";
 import SiteHeader from "@/components/SiteHeader";
 
@@ -25,8 +25,12 @@ export default async function HomePage({
   }
 
   if (category) {
+    const lower = category.toLowerCase();
     filtered = filtered.filter(
-      (p) => p.category.toLowerCase() === category.toLowerCase()
+      (p) =>
+        p.category.toLowerCase() === lower ||
+        (categoryLabels[p.category] &&
+          categoryLabels[p.category].toLowerCase() === lower)
     );
   }
 
@@ -86,10 +90,10 @@ export default async function HomePage({
               defaultValue={category}
               className="w-full rounded-xl border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-4 py-2.5 text-sm text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
             >
-              <option value="">All</option>
+              <option value="">Tất cả</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
-                  {cat}
+                  {categoryLabels[cat] || cat}
                 </option>
               ))}
             </select>

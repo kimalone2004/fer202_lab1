@@ -63,6 +63,14 @@ export function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN") + " VNĐ";
 }
 
+// Category Vietnamese labels mapping
+export const categoryLabels: Record<string, string> = {
+  Audio: "Âm thanh",
+  Wearable: "Thiết bị đeo",
+  Peripheral: "Thiết bị ngoại vi",
+  Accessory: "Phụ kiện",
+};
+
 // Helper: get all unique categories
 export function getCategories(): string[] {
   return [...new Set(products.map((p) => p.category))];
