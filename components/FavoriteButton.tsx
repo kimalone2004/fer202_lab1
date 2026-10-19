@@ -16,7 +16,9 @@ export default function FavoriteButton({ productId }: FavoriteButtonProps) {
 
   const favorited = isFavorite(productId);
 
-  const handleClick = () => {
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (!user) {
       router.push("/login");
       return;

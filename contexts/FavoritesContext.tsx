@@ -129,7 +129,7 @@ export function FavoritesProvider({ children }: { children: ReactNode }) {
 
         supabase
           .from("favorites")
-          .insert({ product_id: id })
+          .insert({ product_id: id, user_id: user.id })
           .then(({ error }) => {
             if (error) {
               console.error("Failed to add favorite:", error.message);
