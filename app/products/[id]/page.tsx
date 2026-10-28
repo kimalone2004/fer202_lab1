@@ -4,6 +4,9 @@ import Link from "next/link";
 import { products, formatPrice, categoryLabels } from "@/data/products";
 import type { Metadata } from "next";
 import FavoriteButton from "@/components/FavoriteButton";
+import { getProductReviews } from "@/lib/reviews";
+import { ReviewsProvider } from "@/contexts/ReviewsContext";
+import ProductReviews from "@/components/ProductReviews";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // generateStaticParams — pre-render every product page at build time
@@ -11,6 +14,9 @@ import FavoriteButton from "@/components/FavoriteButton";
 export async function generateStaticParams() {
   return products.map((p) => ({ id: String(p.id) }));
 }
+
+// Ensure unknown product IDs return real HTTP 404
+export const dynamicParams = false;
 
 // ─────────────────────────────────────────────────────────────────────────────
 // generateMetadata — dynamic <title> per product
@@ -40,11 +46,15 @@ export default async function ProductDetailPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const product = products.find((p) => p.id === Number(id));
+  const numId = Number(id);
+  const product = products.find((p) => p.id === numId);
 
   if (!product) {
     notFound();
   }
+
+  // Fetch reviews on the server for initial render
+  const reviewsData = await getProductReviews(product.id);
 
   return (
     <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
@@ -82,8 +92,9 @@ export default async function ProductDetailPage({
         </div>
       </nav>
 
-      {/* Product detail */}
+      {/* Main Content */}
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16">
+        {/* Product detail */}
         <div
           data-testid="product-detail"
           className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12"
@@ -137,6 +148,16 @@ export default async function ProductDetailPage({
             </div>
           </div>
         </div>
+
+        {/* ── Reviews Section (wrapped only in ReviewsProvider) ─────────────── */}
+        <section className="mt-16 pt-10 border-t border-zinc-200 dark:border-zinc-800">
+          <ReviewsProvider
+            productId={product.id}
+            initialReviews={reviewsData.reviews}
+          >
+            <ProductReviews productId={product.id} />
+          </ReviewsProvider>
+        </section>
       </main>
     </div>
   );
